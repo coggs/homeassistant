@@ -1,0 +1,35 @@
+customize:
+switch.aircon:
+friendly_name: Daikin Aircon
+emulated_hue_name: "aircon"
+icon: mdi:fan
+
+switch:
+– platform: command_line
+switches:
+aircon:
+command_on: "curl -k --silent \"http://1.2.3.4:2000/set.cgi?pass=0000&p=1\""
+command_off: "curl -k --silent \"http://1.2.3.4:2000/set.cgi?pass=0000&p=0\""
+command_state: "curl -k --silent \"http://1.2.3.4:2000/ac.cgi?pass=0000\" | awk -F'[=&]' '{print $2}'"
+
+
+sensor:
+- platform: command_line
+name: Inside
+unit_of_measurement: "°C" 
+command: "curl -k --silent \"http://1.2.3.4:2000/ac.cgi?pass=0000\" | awk -F'[=&]' '{print $24}'"
+– platform: command_line
+name: Outside
+unit_of_measurement: "°C" 
+command: "curl -k --silent \"http://1.2.3.4:2000/ac.cgi?pass=0000\" | awk -F'[=&]' '{print $26}'"
+
+
+emulated_hue:
+host_ip: 1.1.1.1 
+listen_port: 8300
+off_maps_to_on_domains:
+– script
+– scene
+expose_by_default: true
+exposed_domains:
+– switch
